@@ -1,20 +1,19 @@
 package bullhorndos.demo;
 
-import org.hibernate.annotations.Cascade;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name="USER_DATA") // USER_DATA is the table name that gets created in the database
+@Table(name = "User_Data")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column (name = "email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password")
@@ -29,36 +28,24 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column (name = "username")
+    @Column(name = "username")
     private String username;
 
-    @ManyToMany (fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
-
-    public Collection<Message> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(<Message> messages) {
-        this.courses = courses;
-    }
-
-    @ManyToMany(Cascade = CascadeType.ALL)
-    private Collection<Course> courses;
-
-    public User() {
-
-    }
 
     public User(String email, String password, String firstName, String lastName, boolean enabled, String username) {
         this.email = email;
-        this.password = password;
+        setPassword(password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.enabled = enabled;
         this.username = username;
+    }
+
+
+    public User() {
     }
 
     public long getId() {
@@ -82,15 +69,17 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder passwordEncoder =
+                new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String firstnName) {
+        this.firstName = firstnName;
     }
 
     public String getLastName() {

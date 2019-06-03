@@ -17,6 +17,15 @@ public class Message {
     @NotNull
     private String postedBy;
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+
+
+
     public Message() {
     }
 
@@ -26,7 +35,23 @@ public class Message {
         this.postedDate = postedDate;
         this.postedBy = postedBy;
     }
+    private String image;
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     public long getId() {
         return id;
     }
